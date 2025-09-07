@@ -75,4 +75,12 @@ export class UsersRepository {
       },
     });
   }
+
+  async findOneByEmail(email: string): Promise<UserEntity | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+  }
 }

@@ -6,19 +6,44 @@ import {
   Patch,
   Param,
   Delete,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiTags } from '@nestjs/swagger';
-@ApiTags('Users')
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileDTO } from '../upload/dto/upload.dto';
+import { UploadService } from '../upload/upload.service';
+
+@ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly uploadService: UploadService,
+  ) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFile() file?: FileDTO,
+  ) {
+    let imageUrl: string | null = null;
+
+    if (file) {
+      const uploaded = await this.uploadService.upload(file);
+
+      console.log('uploaded', uploaded);
+      imageUrl = uploaded.url;
+    }
+
+    return this.postsService.create({
+      ...createPostDto,
+      image: imageUrl || undefined,
+    });
   }
 
   @Get()
@@ -39,5 +64,10 @@ export class PostsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
+  }
+
+  @Patch(':id/like')
+  incrementLike(@Param('id') id: string) {
+    return this.postsService.incrementLike(+id);
   }
 }

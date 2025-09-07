@@ -7,7 +7,7 @@ import { PostsRepository } from './repositories/posts.repository';
 export class PostsService {
   constructor(private readonly repository: PostsRepository) {}
 
-  create(createPostDto: CreatePostDto) {
+  create(createPostDto: CreatePostDto & { image?: string }) {
     return this.repository.create(createPostDto);
   }
 
@@ -25,5 +25,17 @@ export class PostsService {
 
   remove(id: number) {
     return this.repository.remove(id);
+  }
+
+  async incrementLike(postId: number) {
+    const post = await this.repository.findOne(postId);
+
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    return this.repository.update(postId, {
+      likes: post.likes + 1,
+    });
   }
 }

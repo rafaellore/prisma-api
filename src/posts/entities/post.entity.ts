@@ -8,4 +8,6 @@ export class PostEntity implements Post {
   createdAt: Date;
   updatedAt: Date;
   authorId: number | null;
+  image: string | null;
+  likes: number;
 }
