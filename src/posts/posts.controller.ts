@@ -66,8 +66,8 @@ export class PostsController {
     return this.postsService.remove(+id);
   }
 
-  @Patch(':id/like')
-  incrementLike(@Param('id') id: string) {
-    return this.postsService.incrementLike(+id);
+  @Post(':id/like')
+  toggleLike(@Param('id') id: string, @Body('userId') userId: number) {
+    return this.postsService.toggleLike(+id, userId);
   }
 }

@@ -47,6 +47,16 @@ export class PostsRepository {
             name: true,
           },
         },
+        likes: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -62,6 +72,16 @@ export class PostsRepository {
           select: {
             name: true,
             email: true,
+          },
+        },
+        likes: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -117,5 +137,30 @@ export class PostsRepository {
         id,
       },
     });
+  }
+
+  async toggleLike(postId: number, userId: number) {
+    const post = await this.findOne(postId);
+
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    const existingLike = await this.prisma.like.findUnique({
+      where: { userId_postId: { userId, postId } },
+    });
+
+    if (existingLike) {
+      await this.prisma.like.delete({
+        where: { userId_postId: { userId, postId } },
+      });
+      return { message: 'Like removed' };
+    }
+
+    await this.prisma.like.create({
+      data: { userId, postId },
+    });
+
+    return { message: 'Like added' };
   }
 }

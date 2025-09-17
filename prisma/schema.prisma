@@ -21,8 +21,21 @@ model User {
   admin     Boolean  @default(false)
   createdAt DateTime @default(now())
   posts     Post[]
+  likes     Like[]
 
   @@map("user")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@map("like")
 }
 
 model Post {
@@ -35,7 +48,7 @@ model Post {
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
   image     String?
-  likes     Int      @default(0)
+  likes     Like[]
 
   @@map("post")
 }

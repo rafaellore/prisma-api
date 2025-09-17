@@ -17,8 +17,4 @@ export class CreatePostDto {
 
   @IsEmail()
   authorEmail?: string;
-
-  @IsNumber()
-  @IsOptional()
-  likes: number;
 }

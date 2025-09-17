@@ -1,4 +1,6 @@
-import { Post } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
+import { Like, Post } from '@prisma/client';
+import { LikeEntity } from 'src/likes/entities/like.entity';
 
 export class PostEntity implements Post {
   id: number;
@@ -9,5 +11,7 @@ export class PostEntity implements Post {
   updatedAt: Date;
   authorId: number | null;
   image: string | null;
-  likes: number;
+
+  @ApiProperty({ type: () => [LikeEntity], required: false })
+  likes?: Like[];
 }

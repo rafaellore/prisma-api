@@ -27,15 +27,7 @@ export class PostsService {
     return this.repository.remove(id);
   }
 
-  async incrementLike(postId: number) {
-    const post = await this.repository.findOne(postId);
-
-    if (!post) {
-      throw new Error('Post not found');
-    }
-
-    return this.repository.update(postId, {
-      likes: post.likes + 1,
-    });
+  async toggleLike(postId: number, userId: number) {
+    return this.repository.toggleLike(postId, userId);
   }
 }
