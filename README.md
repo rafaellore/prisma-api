@@ -1,6 +1,4 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Cats API
 
 <p align="center">🐱 Uma API construída com <a href="https://nestjs.com/" target="_blank">NestJS</a>, <a href="https://www.prisma.io/" target="_blank">Prisma</a> e <a href="https://www.docker.com/" target="_blank">Docker</a> para criar e gerenciar posts de gatinhos.</p>
 
